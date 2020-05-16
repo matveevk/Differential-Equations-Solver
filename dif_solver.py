@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 class DifSolver:
 
     """
-    - function - differentiated function (e. g. lambda (x, y): x^2 * y)
+    - derivative - derivative derivative (e. g. lambda (x, y): x^2 * y)
     - condition - pair of condition values (x0, y0), so y(x0) = y0
     - func_name - name of the function variable (e. g. 'y')
     - var_name - name of the respect-variable (e. g. 'x')
@@ -31,7 +31,7 @@ class DifSolver:
         self.raw = [equation, condition]
 
         self.func_name, self.var_name = self.parse_name(equation)
-        self.function = self.parse_function(equation)
+        self.derivative = self.parse_derivative(equation)
         self.condition = self.parse_condition(condition)
 
     def parse_name(self, equation: str):
@@ -45,16 +45,16 @@ class DifSolver:
             return r1.fixed[:2]
         elif r2 is not None:
             func_name = r2.fixed[0]
-            function = r2.fixed[1]
+            derivative = r2.fixed[1]
             for name in sorted(self.reserved_names.keys(), key=len, reverse=True):
-                function = function.replace(name, '')
-            for ch in function:
+                derivative = derivative.replace(name, '')
+            for ch in derivative:
                 if ch.isalpha() and ch != func_name:
                     return func_name, ch
             return func_name, ('x' if func_name != 'x' else 't')
         raise ValueError('Wrong equation input format for ' + equation)
 
-    def parse_function(self, equation: str):
+    def parse_derivative(self, equation: str):
         """
         :param equation: string, format of either dy/dx = x^2*y, or y'=x^2*y
         :return: lambda-function corresponding to input
@@ -113,11 +113,11 @@ if __name__ == '__main__':
     equation = 'dy/dx = cos(x)*y'
     condition = "y(0) = 2"
     ds = DifSolver(equation, condition)
-    print(ds.function(.5, 2))
+    print(ds.derivative(.5, 2))
 
     equation = "y' = cos(x) * y"
     condition = "y(0) = 2"
     ds = DifSolver(equation, condition)
-    print(ds.function(.5, 2))
+    print(ds.derivative(.5, 2))
 
     print(ds)
