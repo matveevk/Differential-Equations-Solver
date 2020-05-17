@@ -34,6 +34,13 @@ class DifSolver:
         self.derivative = self.parse_derivative(equation)
         self.condition = self.parse_condition(condition)
 
+    def solve(
+            self,
+            step_sz: float = 0.05,
+            order: int = 4,
+    ):
+        return None
+
     def parse_name(self, equation: str):
         """
         :param equation: string, format of either dy/dx = x^2y, or y' = x^2 * y
@@ -100,9 +107,9 @@ class DifSolver:
         'arctan': math.atan,
         'arctg': math.atan,
         'atan': math.atan,
-        'arcctg': lambda x: math.atan2(1 / x),
-        'arccot': lambda x: math.atan2(1 / x),
-        'acot': lambda x: math.atan2(1 / x),
+        'arcctg': lambda x: math.atan(1 / x),
+        'arccot': lambda x: math.atan(1 / x),
+        'acot': lambda x: math.atan(1 / x),
         'pi': math.pi,
         'e': math.e,
         # TODO: add Hyperbolic functions, Abs, Floor, Ceil, Sign, Logarithms
