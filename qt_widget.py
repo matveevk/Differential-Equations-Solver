@@ -3,6 +3,7 @@ import random
 from PySide2.QtWidgets import (QApplication, QLabel, QPushButton,
                                QVBoxLayout, QWidget)
 from PySide2.QtCore import Slot, Qt
+from .dif_solver import DifSolver
 
 
 class MyWidget(QWidget):
