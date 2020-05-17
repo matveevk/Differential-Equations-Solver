@@ -34,13 +34,6 @@ class DifSolver:
         self.derivative = self.parse_derivative(equation)
         self.condition = self.parse_condition(condition)
 
-    def solve(
-            self,
-            step_sz: float = 0.05,
-            order: int = 4,
-    ):
-        return None
-
     def parse_name(self, equation: str):
         """
         :param equation: string, format of either dy/dx = x^2y, or y' = x^2 * y
