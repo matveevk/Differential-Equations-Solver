@@ -1,5 +1,7 @@
 import math
 from parse import *
+from typing import Sequence
+import numpy as np
 import matplotlib.pyplot as plt
 
 
@@ -36,10 +38,46 @@ class DifSolver:
 
     def solve(
             self,
-            step_sz: float = 0.05,
+            step: float = 0.1,
             order: int = 4,
+            breadth: float = 10,
+            a: Sequence[Sequence[float]] = [[],
+                                            [0.5],
+                                            [0, 0.5],
+                                            [0, 0, 1]],
+            b: Sequence[float] = np.array((1/6, 1/3, 1/3, 1/6)),
+            c: Sequence[float] = np.array((0, 0.5, 0.5, 1)),
+            visualize: bool = True
     ):
-        return None
+        """
+        :param step: parameter of method
+        :param order: number of stages
+        :param breadth: how much of x-axis to calculate
+        :param a: Runge–Kutta matrix
+        :param b: weights
+        :param c: nodes
+        :return: returns pair of lists (x, y) such that y_i = y(x_i)
+        Note indexing (0 to order-1)
+        """
+
+        xs = [x for x in np.arange(self.condition[0], self.condition[0] + breadth, step)]
+        ys = [self.condition[1]]
+
+        for i, x in enumerate(xs[1:], start=1):
+            k = np.zeros(order)
+            for j in range(order):
+                x_par = xs[i - 1] + step * c[j]
+                y_par = ys[i - 1] + step * np.dot(a[j], k[:j])
+                k[j] = self.derivative(x_par, y_par)
+
+            new_y = ys[i - 1] + step * np.dot(b, k)
+            ys.append(new_y)
+
+        if visualize:
+            plt.plot(xs, ys, 'ro')
+            plt.title(self.raw)
+            plt.show()
+        return xs, ys
 
     def parse_name(self, equation: str):
         """
@@ -75,7 +113,8 @@ class DifSolver:
                                  {self.func_name: f, self.var_name: t},
                                  self.reserved_names)
 
-    def parse_condition(self, condition: str):
+    @staticmethod
+    def parse_condition(condition: str):
         """
         :param condition: string, format of y(0.5)=20
         :return:
@@ -117,14 +156,19 @@ class DifSolver:
 
 
 if __name__ == '__main__':
-    equation = 'dy/dx = cos(x)*y'
-    condition = "y(0) = 2"
-    ds = DifSolver(equation, condition)
-    print(ds.derivative(.5, 2))
+    cosxy = 'cos(x)*y'
+    xp1 = '2*x+1'
 
-    equation = "y' = cos(x) * y"
+    foo = xp1
+
+
+    equation = 'dy/dx = ' + foo
     condition = "y(0) = 2"
     ds = DifSolver(equation, condition)
-    print(ds.derivative(.5, 2))
+    ds.solve()
+
+    equation = "y' = " + foo
+    condition = "y(0) = 2"
+    DifSolver(equation, condition).solve()
 
     print(ds)
