@@ -47,7 +47,7 @@ class DifSolver:
                                             [0, 0, 1]],
             b: Sequence[float] = np.array((1/6, 1/3, 1/3, 1/6)),
             c: Sequence[float] = np.array((0, 0.5, 0.5, 1)),
-            visualize: bool = True
+            visualize: bool = False
     ):
         """
         :param step: parameter of method
@@ -56,6 +56,7 @@ class DifSolver:
         :param a: Runge–Kutta matrix
         :param b: weights
         :param c: nodes
+        :param visualize: shows plt graph if True
         :return: returns pair of lists (x, y) such that y_i = y(x_i)
         Note indexing (0 to order-1)
         """
@@ -161,7 +162,6 @@ if __name__ == '__main__':
 
     foo = xp1
 
-
     equation = 'dy/dx = ' + foo
     condition = "y(0) = 2"
     ds = DifSolver(equation, condition)
@@ -169,6 +169,6 @@ if __name__ == '__main__':
 
     equation = "y' = " + foo
     condition = "y(0) = 2"
-    DifSolver(equation, condition).solve()
+    DifSolver(equation, condition).solve(visualize=True)
 
     print(ds)

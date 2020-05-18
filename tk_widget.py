@@ -8,6 +8,7 @@ from diffeq.dif_solver import DifSolver
 import matplotlib as plt
 plt.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from matplotlib.backend_bases import key_press_handler
 from matplotlib.figure import Figure
 import numpy as np
 
@@ -81,7 +82,9 @@ class StartPage(tk.Frame):
 class PageOne(tk.Frame):
 
     """
-    func, cond
+    - func - raw input string of derivative equation
+    - cond - raw input string of condition
+    - difsolver - solver of type DifSolver
     """
 
     def __init__(self, parent, controller):
@@ -96,6 +99,8 @@ class PageOne(tk.Frame):
                              command=lambda: controller.show_frame(StartPage))
         button1.pack()
 
+        self.difsolver = None
+
     def set_attr(self, func=None, cond=None):
         self.func = func
         self.cond = cond
@@ -105,6 +110,27 @@ class PageOne(tk.Frame):
             width=max(15, 1 + max(len(self.func), len(self.cond))),
             height=1+2
         )
+        self.difsolver = DifSolver(equation=self.func, condition=self.cond)
+        self.draw_res()
+
+    def draw_res(self):
+        xs, ys = self.difsolver.solve()
+        fig = Figure(figsize=(5, 4), dpi=100)
+        fig.add_subplot(111).plot(xs, ys)
+
+        canvas = FigureCanvasTkAgg(fig, master=self)
+        canvas.draw()
+
+        toolbar = NavigationToolbar2Tk(canvas, self)
+        toolbar.update()
+
+        def on_key_press(event):
+            print("you pressed {}".format(event.key))
+            key_press_handler(event, canvas, toolbar)
+
+        canvas.mpl_connect("key_press_event", on_key_press)
+
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
 
 if __name__ == '__main__':
