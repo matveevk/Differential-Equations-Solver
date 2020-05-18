@@ -1,39 +1,51 @@
 import sys
 import random
-from PySide2.QtWidgets import (QApplication, QLabel, QPushButton,
-                               QVBoxLayout, QWidget)
+from PySide2.QtWidgets import *
 from PySide2.QtCore import Slot, Qt
-from .dif_solver import DifSolver
+from diffeq.dif_solver import DifSolver
 
 
-class MyWidget(QWidget):
-    def __init__(self):
-        QWidget.__init__(self)
+class Form(QDialog):
 
-        self.hello = ["Hallo Welt", "你好，世界", "Hei maailma",
-            "Hola Mundo", "Привет мир"]
+    def __init__(self, parent=None):
+        super(Form, self).__init__(parent)
+        # Create widgets
+        self.enter = QVBoxLayout()
+        self.enter.flabel = QLabel("Enter differential equation\n(e. g. y' = x*y, or dy/dt = t^2)")
+        self.enter.fedit = QLineEdit().setPlaceholderText("differential equation")
+        self.enter.clabel = QLabel("Enter condition\n(e. g. y(0) = 2")
+        self.enter.cedit = QLineEdit().setPlaceholderText("condition")
 
-        self.button = QPushButton("Click me!")
-        self.text = QLabel("Hello World")
-        self.text.setAlignment(Qt.AlignCenter)
+        self.button_solve = QPushButton("Solve")
 
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(self.text)
-        self.layout.addWidget(self.button)
-        self.setLayout(self.layout)
+        # Create layout and add widgets
+        layout = QVBoxLayout()
+        layout.addWidget(self.enter.flabel)
+        layout.addWidget(self.enter.fedit)
+        layout.addWidget(self.enter.clabel)
+        layout.addWidget(self.enter.cedit)
+        #layout.addWidget(self.enter.button_solve)
+        self.enter.setLayout(layout)
 
-        # Connecting the signal
-        self.button.clicked.connect(self.magic)
+        layout = QVBoxLayout()
+        layout.addWidget(self.enter)
+        layout.addWidget(self.button_solve)
 
-    @Slot()
-    def magic(self):
-        self.text.setText(random.choice(self.hello))
+        # Set dialog layout
+        self.setLayout(layout)
+
+        # Add button signal to greetings slot
+        self.button_solve.clicked.connect(self.solver)
+
+    # Activated on click
+    def solver(self):
+        print(DifSolver(self.enter.fedit.text(), self.enter.cedit.text()).solve())
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    widget = MyWidget()
+    widget = Form()
     widget.resize(800, 600)
     widget.show()
 
