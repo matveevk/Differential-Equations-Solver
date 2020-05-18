@@ -38,7 +38,7 @@ class DifSolver:
 
     def solve(
             self,
-            step: float = 0.1,
+            step: float = 0.01,
             order: int = 4,
             breadth: float = 10,
             a: Sequence[Sequence[float]] = [[],
@@ -61,8 +61,9 @@ class DifSolver:
         Note indexing (0 to order-1)
         """
 
-        xs = [x for x in np.arange(self.condition[0], self.condition[0] + breadth, step)]
-        ys = [self.condition[1]]
+        xs = np.arange(self.condition[0], self.condition[0] + breadth, step)
+        ys = np.zeros(len(xs))
+        ys[0] = self.condition[1]
 
         for i, x in enumerate(xs[1:], start=1):
             k = np.zeros(order)
@@ -71,11 +72,10 @@ class DifSolver:
                 y_par = ys[i - 1] + step * np.dot(a[j], k[:j])
                 k[j] = self.derivative(x_par, y_par)
 
-            new_y = ys[i - 1] + step * np.dot(b, k)
-            ys.append(new_y)
+            ys[i] = ys[i - 1] + step * np.dot(b, k)
 
         if visualize:
-            plt.plot(xs, ys, 'ro')
+            plt.plot(xs, ys)
             plt.title(self.raw)
             plt.show()
         return xs, ys
@@ -106,7 +106,7 @@ class DifSolver:
         :return: lambda-function corresponding to input
         """
         func = equation.split('=')[1]
-        func.replace('^', '**')
+        func = func.replace('^', '**')
 
         # TODO: surround vars with * (2a -> 2*a; xcos(y) -> x*cos(y))
 
