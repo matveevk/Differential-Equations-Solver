@@ -100,7 +100,7 @@ class PageOne(tk.Frame):
         button1.pack()
 
         self.difsolver = None
-        self.fig = None
+        self.canvas = None
 
     def set_attr(self, func=None, cond=None):
         self.func = func
@@ -115,24 +115,27 @@ class PageOne(tk.Frame):
         self.draw_res()
 
     def draw_res(self):
+        if self.canvas is not None:
+            self.canvas.get_tk_widget().destroy()
+
         xs, ys = self.difsolver.solve()
 
-        self.fig = Figure(figsize=(5, 4), dpi=100)
-        self.fig.add_subplot(111).plot(xs, ys)
+        fig = Figure(figsize=(5, 4), dpi=100)
+        fig.add_subplot(111).plot(xs, ys)
 
-        canvas = FigureCanvasTkAgg(self.fig, master=self)
-        canvas.draw()
+        self.canvas = FigureCanvasTkAgg(fig, master=self)
+        self.canvas.draw()
 
-        toolbar = NavigationToolbar2Tk(canvas, self)
+        toolbar = NavigationToolbar2Tk(self.canvas, self)
         toolbar.update()
 
         def on_key_press(event):
             print("you pressed {}".format(event.key))
-            key_press_handler(event, canvas, toolbar)
+            key_press_handler(event, self.canvas, toolbar)
 
-        canvas.mpl_connect("key_press_event", on_key_press)
+        self.canvas.mpl_connect("key_press_event", on_key_press)
 
-        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+        self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
 
 def main():
