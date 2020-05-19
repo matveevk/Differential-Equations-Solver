@@ -3,15 +3,14 @@
 
 import tkinter as tk
 from tkinter import ttk
-from diffeq.dif_solver import DifSolver
+from dif_solver import DifSolver
 
-import matplotlib as plt
-plt.use("TkAgg")
+from matplotlib import use
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from matplotlib.backend_bases import key_press_handler
 from matplotlib.figure import Figure
-import numpy as np
 
+use("TkAgg")
 
 LARGE_FONT = ("Verdana", 12)
 
@@ -85,6 +84,7 @@ class PageOne(tk.Frame):
     - func - raw input string of derivative equation
     - cond - raw input string of condition
     - difsolver - solver of type DifSolver
+    - fig - to draw graph
     """
 
     def __init__(self, parent, controller):
@@ -100,6 +100,7 @@ class PageOne(tk.Frame):
         button1.pack()
 
         self.difsolver = None
+        self.fig = None
 
     def set_attr(self, func=None, cond=None):
         self.func = func
@@ -115,10 +116,11 @@ class PageOne(tk.Frame):
 
     def draw_res(self):
         xs, ys = self.difsolver.solve()
-        fig = Figure(figsize=(5, 4), dpi=100)
-        fig.add_subplot(111).plot(xs, ys)
 
-        canvas = FigureCanvasTkAgg(fig, master=self)
+        self.fig = Figure(figsize=(5, 4), dpi=100)
+        self.fig.add_subplot(111).plot(xs, ys)
+
+        canvas = FigureCanvasTkAgg(self.fig, master=self)
         canvas.draw()
 
         toolbar = NavigationToolbar2Tk(canvas, self)
@@ -133,5 +135,9 @@ class PageOne(tk.Frame):
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
 
-if __name__ == '__main__':
+def main():
     Program().mainloop()
+
+
+if __name__ == '__main__':
+    main()

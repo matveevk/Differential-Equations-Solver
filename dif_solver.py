@@ -1,8 +1,8 @@
 import math
-from parse import *
+from parse import parse
 from typing import Sequence
 import numpy as np
-import matplotlib.pyplot as plt
+from matplotlib.pyplot import show, plot, title
 
 
 # DifSolver class solves differential equation
@@ -75,9 +75,9 @@ class DifSolver:
             ys[i] = ys[i - 1] + step * np.dot(b, k)
 
         if visualize:
-            plt.plot(xs, ys)
-            plt.title(self.raw)
-            plt.show()
+            plot(xs, ys)
+            title(self.raw)
+            show()
         return xs, ys
 
     def parse_name(self, equation: str):
