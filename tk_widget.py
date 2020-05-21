@@ -53,7 +53,7 @@ class Program(tk.Tk):
 class StartPage(tk.Frame):
 
     """
-    contaoins boxes to enter the parameters of the problem
+    contains boxes to enter the parameters of the problem
     passes the parameters to PageOne
     """
 
