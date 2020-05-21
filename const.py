@@ -13,8 +13,8 @@ RK4_C = array((0, 0.5, 0.5, 1))
 # Euler method constants (RK order of 1):
 
 EULER_A = [[]]
-EULER_B = array(1)
-EULER_C = array(0)
+EULER_B = array(1, ndmin=1)
+EULER_C = array(0, ndmin=1)
 
 # 3/8 rule method constants:
 

@@ -32,10 +32,10 @@ simple_euler.solve(visualize=True, method='EULER', breadth=20, step=0.02)
 
 `c` — левый столбец таблицы Бутчера (прирост абцисс в пересчёте коэффициентов)
 ```
-custom = DifSolver("y' = y * x, y(0) = 0")
-xs, ys = custom.solve(a=[[], [2/3]], b=[1/4, 3/4], c=[0, 2/3])
+custom = DifSolver("y' = y + x", " y(0) = 1")
+xs, ys = custom.solve(a=[[], [2 / 3]], b=[1 / 4, 3 / 4], c=[0, 2 / 3])
 # печатаем полученные значения:
-print(('y({}) = {}'.format(xs[i], ys[i]) for i in range(len(xs)))
+print('\n'.join('y({}) = {}'.format(xs[i], ys[i]) for i in range(len(xs))))
 ```
 
 ## In English:

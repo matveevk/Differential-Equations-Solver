@@ -60,7 +60,7 @@ class DifSolver:
         """
 
         a, b, c = self.get_params(method, a, b, c)
-        order = len(b)
+        order = b.shape[0]
 
         xs = np.arange(self.condition[0], self.condition[0] + breadth, step)
         ys = np.zeros(len(xs))
@@ -135,7 +135,7 @@ class DifSolver:
         method = method.upper()
         if method in C.METHODS:
             return C.METHODS[method]
-        return a, np.array(b), np.array(c)
+        return a, np.array(b, ndmin=1), np.array(c, ndmin=1)
 
 
 if __name__ == '__main__':
