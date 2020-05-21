@@ -3,13 +3,12 @@ from parse import parse
 from typing import Sequence
 import numpy as np
 from matplotlib.pyplot import show, plot, title
-
+import const as C
 
 # DifSolver class solves differential equation
 # stated as in Cauchy problem (e. g. y' = x^2y, y(0.5) = 20)
 # using The Runge–Kutta method
 # (see https://en.wikipedia.org/wiki/Runge-Kutta_methods)
-
 
 class DifSolver:
 
@@ -41,18 +40,18 @@ class DifSolver:
             step: float = 0.01,
             order: int = 4,
             breadth: float = 10,
-            a: Sequence[Sequence[float]] = [[],
-                                            [0.5],
-                                            [0, 0.5],
-                                            [0, 0, 1]],
-            b: Sequence[float] = np.array((1/6, 1/3, 1/3, 1/6)),
-            c: Sequence[float] = np.array((0, 0.5, 0.5, 1)),
+            method: str = 'RK4',
+            a: Sequence[Sequence[float]] = C.RK4_A,
+            b: Sequence[float] = C.RK4_B,
+            c: Sequence[float] = C.RK4_C,
             visualize: bool = False
     ):
         """
         :param step: parameter of method
         :param order: number of stages
         :param breadth: how much of x-axis to calculate
+        :param method: standard method to solve with, overrides a, b, c
+                       possible value: RK4, EULER, 3/8 TODO add
         :param a: Runge–Kutta matrix
         :param b: weights
         :param c: nodes
@@ -60,6 +59,8 @@ class DifSolver:
         :return: returns pair of lists (x, y) such that y_i = y(x_i)
         Note indexing (0 to order-1)
         """
+
+        a, b, c = self.get_params(method, a, b, c)
 
         xs = np.arange(self.condition[0], self.condition[0] + breadth, step)
         ys = np.zeros(len(xs))
@@ -80,7 +81,8 @@ class DifSolver:
             show()
         return xs, ys
 
-    def parse_name(self, equation: str):
+    @staticmethod
+    def parse_name(equation: str):
         """
         :param equation: string, format of either dy/dx = x^2y, or y' = x^2 * y
         :return: pair of letters matching function and variable (e. g. ('y', 'x'))
@@ -92,7 +94,7 @@ class DifSolver:
         elif r2 is not None:
             func_name = r2.fixed[0]
             derivative = r2.fixed[1]
-            for name in sorted(self.reserved_names.keys(), key=len, reverse=True):
+            for name in sorted(C.RESERVED_NAMES.keys(), key=len, reverse=True):
                 derivative = derivative.replace(name, '')
             for ch in derivative:
                 if ch.isalpha() and ch != func_name:
@@ -112,7 +114,7 @@ class DifSolver:
 
         return lambda t, f: eval(func,
                                  {self.func_name: f, self.var_name: t},
-                                 self.reserved_names)
+                                 C.RESERVED_NAMES)
 
     @staticmethod
     def parse_condition(condition: str):
@@ -128,32 +130,12 @@ class DifSolver:
             self.condition[0], self.condition[1]
         )
 
-    reserved_names = {
-        'cos': math.cos,
-        'sin': math.sin,
-        'sqrt': math.sqrt,
-        'fact': math.factorial,
-        'log': math.log,
-        'ln': math.log,
-        'log10': math.log10,
-        'tan': math.tan,
-        'tg': math.tan,
-        'ctg': lambda x: 1 / math.tan(x),
-        'cot': lambda x: 1 / math.tan(x),
-        'arcsin': math.asin,
-        'asin': math.asin,
-        'arccos': math.acos,
-        'acos': math.acos,
-        'arctan': math.atan,
-        'arctg': math.atan,
-        'atan': math.atan,
-        'arcctg': lambda x: math.atan(1 / x),
-        'arccot': lambda x: math.atan(1 / x),
-        'acot': lambda x: math.atan(1 / x),
-        'pi': math.pi,
-        'e': math.e,
-        # TODO: add Hyperbolic functions, Abs, Floor, Ceil, Sign, Logarithms
-    }
+    @staticmethod
+    def get_params(method, a, b, c):
+        method = method.upper()
+        if method in C.METHODS:
+            return C.METHODS[method]
+        return a, b, c
 
 
 if __name__ == '__main__':

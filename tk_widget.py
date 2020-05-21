@@ -52,6 +52,11 @@ class Program(tk.Tk):
 
 class StartPage(tk.Frame):
 
+    """
+    contaoins boxes to enter the parameters of the problem
+    passes the parameters to PageOne
+    """
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
@@ -85,6 +90,7 @@ class PageOne(tk.Frame):
     - cond - raw input string of condition
     - difsolver - solver of type DifSolver
     - fig - to draw graph
+    - canvas - canvas object
     """
 
     def __init__(self, parent, controller):
