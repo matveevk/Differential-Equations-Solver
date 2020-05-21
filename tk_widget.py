@@ -90,7 +90,7 @@ class PageOne(tk.Frame):
     - cond - raw input string of condition
     - difsolver - solver of type DifSolver
     - fig - to draw graph
-    - canvas - canvas object
+    - canvas, toolbar - drawing supplements
     """
 
     def __init__(self, parent, controller):
@@ -107,6 +107,7 @@ class PageOne(tk.Frame):
 
         self.difsolver = None
         self.canvas = None
+        self.toolbar = None
 
     def set_attr(self, func=None, cond=None):
         self.func = func
@@ -132,12 +133,14 @@ class PageOne(tk.Frame):
         self.canvas = FigureCanvasTkAgg(fig, master=self)
         self.canvas.draw()
 
-        toolbar = NavigationToolbar2Tk(self.canvas, self)
-        toolbar.update()
+        if self.toolbar is not None:
+            self.toolbar.destroy()
+        self.toolbar = NavigationToolbar2Tk(self.canvas, self)
+        self.toolbar.update()
 
         def on_key_press(event):
             print("you pressed {}".format(event.key))
-            key_press_handler(event, self.canvas, toolbar)
+            key_press_handler(event, self.canvas, self.toolbar)
 
         self.canvas.mpl_connect("key_press_event", on_key_press)
 
