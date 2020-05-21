@@ -37,8 +37,8 @@ class DifSolver:
 
     def solve(
             self,
-            step: float = 0.01,
-            breadth: float = 10,
+            step: float = 0.05,
+            breadth: float = 100,
             method: str = 'custom',
             a: Sequence[Sequence[float]] = C.RK4_A,
             b: Sequence[float] = C.RK4_B,
