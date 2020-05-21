@@ -38,9 +38,8 @@ class DifSolver:
     def solve(
             self,
             step: float = 0.01,
-            order: int = 4,
             breadth: float = 10,
-            method: str = 'RK4',
+            method: str = 'custom',
             a: Sequence[Sequence[float]] = C.RK4_A,
             b: Sequence[float] = C.RK4_B,
             c: Sequence[float] = C.RK4_C,
@@ -51,7 +50,7 @@ class DifSolver:
         :param order: number of stages
         :param breadth: how much of x-axis to calculate
         :param method: standard method to solve with, overrides a, b, c
-                       possible value: RK4, EULER, 3/8 TODO add
+                       possible value: RK4, EULER, 3/8 TODO implement more
         :param a: Runge–Kutta matrix
         :param b: weights
         :param c: nodes
@@ -61,6 +60,7 @@ class DifSolver:
         """
 
         a, b, c = self.get_params(method, a, b, c)
+        order = len(b)
 
         xs = np.arange(self.condition[0], self.condition[0] + breadth, step)
         ys = np.zeros(len(xs))
@@ -135,7 +135,7 @@ class DifSolver:
         method = method.upper()
         if method in C.METHODS:
             return C.METHODS[method]
-        return a, b, c
+        return a, np.array(b), np.array(c)
 
 
 if __name__ == '__main__':
