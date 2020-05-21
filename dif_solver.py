@@ -1,4 +1,3 @@
-import math
 from parse import parse
 from typing import Sequence
 import numpy as np
@@ -9,6 +8,7 @@ import const as C
 # stated as in Cauchy problem (e. g. y' = x^2y, y(0.5) = 20)
 # using The Runge–Kutta method
 # (see https://en.wikipedia.org/wiki/Runge-Kutta_methods)
+
 
 class DifSolver:
 
