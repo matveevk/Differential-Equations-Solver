@@ -25,10 +25,18 @@ TE_A = [[],
 TE_B = array((1/8, 3/8, 3/8, 1/8))
 TE_C = array((0, 1/3, 2/3, 1))
 
+# Modified Euler method constants:
+ME_A = [[],
+        [1]]
+ME_B = array((1/2, 1/2))
+ME_C = array((0, 1))
+
 METHODS = {
     'RK4': (RK4_A, RK4_B, RK4_C),
     'EULER': (EULER_A, EULER_B, EULER_C),
     '3/8': (TE_A, TE_B, TE_C),
+    'MEULER': (ME_A, ME_B, ME_C),
+    'HEUN': (ME_A, ME_B, ME_C),
 }
 
 RESERVED_NAMES = {

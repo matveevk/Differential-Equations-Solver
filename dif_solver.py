@@ -154,3 +154,27 @@ if __name__ == '__main__':
     DifSolver(equation, condition).solve(visualize=True)
 
     print(ds)
+    #
+    # import matplotlib.pyplot as plt
+    #
+    # # загатавливаем функцию для демонстрации решения
+    #
+    # def draw(xs, ys, ys_true, title='Решение'):
+    #     plt.plot(xs, ys, label='Результат')
+    #     plt.plot(xs, ys_true, label='Реальная функция')
+    #     plt.legend()
+    #     plt.title(title)
+    #     plt.show()
+    #     # сравниваем с истиной
+    #     print('Среднее отклонение результата от истины:',
+    #           np.average(abs(ys - ys_true)))
+    #     print('Последнее отклонение результата от истины:', abs(ys[-1] - ys_true[-1]))
+    #     print('Среднее относительное отклонение результата от истины:',
+    #           np.average(abs((ys - ys_true) / ys_true)))
+    #     print('Последнее среднее отклонение результата от истины:', abs(ys[-1] - ys_true[-1]) / abs(ys_true[-1]))
+    #
+    # euler = DifSolver("y' = 2 * x", "y(0) = 50")
+    # xs, ys = euler.solve(method='custom', step=1, breadth=100)
+    #
+    # ys_true = np.array(list(map(lambda x: x ** 2 + 50, xs)))
+    draw(xs, ys, ys_true, 'Пример работы модифицированного Эйлера')
