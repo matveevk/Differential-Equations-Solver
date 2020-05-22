@@ -38,5 +38,15 @@ xs, ys = custom.solve(a=[[], [2 / 3]], b=[1 / 4, 3 / 4], c=[0, 2 / 3])
 print('\n'.join('y({}) = {}'.format(xs[i], ys[i]) for i in range(len(xs))))
 ```
 
+Для решения нежёстких уравнений можно воспользоваться неявным методом Эйлера:
+
+```
+ds = DifSolver(equation='dy/dt = -15*y', condition='y(0)=1')
+xs, ys = ds.solve(implicit=True, breadth=5, step=0.15)
+# Рисуем сравнительные графики
+ys_true = list(map(lambda x: math.exp(-15*x), xs))
+draw(xs, ys, ys_true)
+```
+
 ## In English:
 *TODO*
