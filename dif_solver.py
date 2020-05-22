@@ -43,7 +43,8 @@ class DifSolver:
             a: Sequence[Sequence[float]] = C.RK4_A,
             b: Sequence[float] = C.RK4_B,
             c: Sequence[float] = C.RK4_C,
-            visualize: bool = False
+            visualize: bool = False,
+            implicit=False
     ):
         """
         :param step: parameter of method
@@ -55,10 +56,12 @@ class DifSolver:
         :param b: weights
         :param c: nodes
         :param visualize: shows plt graph if True
+        :param implicit: true if implicit method needed else explicit
         :return: returns pair of lists (x, y) such that y_i = y(x_i)
         Note indexing (0 to order-1)
         """
-
+        if implicit:
+            return self.implicit_solve(breadth=breadth, step=step, visualize=visualize)
         a, b, c = self.get_params(method, a, b, c)
         order = b.shape[0]
 
@@ -74,6 +77,28 @@ class DifSolver:
                 k[j] = self.derivative(x_par, y_par)
 
             ys[i] = ys[i - 1] + step * np.dot(b, k)
+
+        if visualize:
+            plot(xs, ys)
+            title(self.raw)
+            show()
+        return xs, ys
+
+    def implicit_solve(self,
+                       breadth: float = 100,
+                       step: float = 0.1,
+                       visualize=False):
+        # params and return as in solve()
+        from scipy.optimize import fsolve
+
+        # function to find root of
+        def eq(y, x, c):
+            return y - step * self.derivative(x, y) - c
+        xs = np.arange(self.condition[0], self.condition[0] + breadth, step)
+        ys = np.zeros(len(xs))
+        ys[0] = self.condition[1]
+        for i, x in enumerate(xs[1:], start=1):
+            ys[i] = fsolve(eq, ys[i-1], (x, ys[i-1]))
 
         if visualize:
             plot(xs, ys)
@@ -177,4 +202,4 @@ if __name__ == '__main__':
     # xs, ys = euler.solve(method='custom', step=1, breadth=100)
     #
     # ys_true = np.array(list(map(lambda x: x ** 2 + 50, xs)))
-    draw(xs, ys, ys_true, 'Пример работы модифицированного Эйлера')
+    # draw(xs, ys, ys_true, 'Пример работы модифицированного Эйлера')
